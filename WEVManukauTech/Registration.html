@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Demand a new game</title>
+    <meta content="javascript" name="vs_defaultClientScript">
+    <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+    <link href="Styles/Form.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        function validateForm() {
+            var b = false;
+
+            b = valExists("FirstNames", "You need to enter your First Names");
+            if (b == false) return false;
+
+            b = valExists("LastName", "You need to enter your Last Name");
+            if (b == false) {
+                document.getElementById("LastName").focus();
+                return false;
+            }
+
+            //20130521 JPC custom code for password
+            var sPassword = document.getElementById("Password").value;
+            var sReEnterPassword = document.getElementById("ReEnterPassword").value;
+            if (sReEnterPassword.length <= 7) {
+                document.getElementById("valReEnterPassword").innerHTML = "* Password needs to be at least 8 characters long";
+                document.getElementById("ReEnterPassword").focus();
+                return false;
+            } else if (sReEnterPassword !== sPassword) {
+                document.getElementById("valReEnterPassword").innerHTML = "* Your 2 Password data entries need to match";
+                document.getElementById("ReEnterPassword").focus();
+                return false;
+            } else {
+                document.getElementById("valReEnterPassword").innerHTML = "*";
+            }
+
+            b = valExists("PreferredConsole", "You need to enter the name of the console");
+            if (b == false) {
+                document.getElementById("Organisation").focus();
+                return false;
+            }
+
+            b = valExists("DesiredGame", "You need to tell us what game you are looking for");
+            if (b == false) {
+                document.getElementById("OrganisationType").focus();
+                return false;
+            }
+
+            b = valExists("Phone", "You need to enter your phone number");
+            if (b == false) {
+                document.getElementById("Phone").focus();
+                return false;
+            }
+
+            b = valExists("Email", "You need to enter your email address");
+            if (b == false) {
+                document.getElementById("Email").focus();
+                return false;
+            }
+
+            //20130521 JPC custom code email validation adapted from w3schools
+            sEmail = document.getElementById("Email").value;
+
+            var atpos = sEmail.indexOf("@");
+            var dotpos = sEmail.lastIndexOf(".");
+            if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= sEmail.length) {
+                document.getElementById("valEmail").innerHTML = "* You need to enter a valid email address";
+                return false;
+            } else {
+                document.getElementById("valEmail").innerHTML = "*";
+            }
+
+            return true;
+        }
+
+        //130521 JPC reusable code to check that input exists
+        //20190617 JPC update for modern simple input element names and ids that match database column names
+        // eg old "txtFirstNames" becomes new "FirstNames"; old "txtPassword" becomes new "Password".
+        // these are passed as arguments to this function via parameter "idInput".
+        // validation message elements have ids matching input element ids with a "val" prefix
+        // e.g. "FirstNames" has a validation message element "valFirstNames"
+        function valExists(idInput, errorMessage) {
+            var sInput = document.getElementById(idInput).value;
+            if (sInput == "") {
+                document.getElementById("val" + idInput).innerHTML = "* " + errorMessage;
+                //20170601 JPC add focus on input field ready to type corrections
+                document.getElementById(idInput).focus();
+                return false;
+            } else {
+                document.getElementById("val" + idInput).innerHTML = "*";
+                return true;
+            }
+
+        }
+
+    </script>
+
+</head>
+<body style="        font-family: arial;background-image: url('../images/retro-big-sun-sp-3840x2400.jpg');background-repeat: no-repeat;background-attachment: fixed;background-size: 100%;">
+    <div id="outerDiv" style="max-width:1160px;margin:auto;padding:5px;background-color: rgba(0,0,0,0.75);min-height:95vh;border-radius: 25px 25px 25px 25px;">
+        <!--120807 JPC  form element has metadata for communication with a remote web server.
+            In production this would be on its own webserver and in most cases
+            the code for that would be action="" -->
+        <form method="post" action="https://wevmit01.azurewebsites.net/formtest.cshtml"
+              id="Form1" onsubmit="return validateForm();">
+            <p id="pHeader" align="center" style="font-weight: bolder; font-size: 30pt; color: white">
+                New
+                Game Demand
+            </p>
+            <p></p>
+            <p><span id="lblFeedback"></span></p>
+            <p style="font-weight: bolder ;color:white; font-size: larger" align="right">
+                <a href="Index.html" id="A1">Back to Home</a>
+            </p>
+
+            <!-- 120807 JPC - the new way for layout.  ul li for rows with CSS width of elements makes columns -->
+            <ul>
+                <li>
+                    <label class="colLeft">ID:</label>
+                    <div class="colRight">
+                        <span id="lblUsername"></span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblFirstNames">First Names:</label>
+                    <div class="colRight">
+                        <input name="FirstNames" type="text" maxlength="50" id="FirstNames" autofocus />
+                        <span id="valFirstNames" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblLastName">Last Name:</label>
+                    <div class="colRight">
+                        <input name="LastName" type="text" maxlength="50" id="LastName" />
+                        <span id="valLastName" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblPassword">Password:</label>
+                    <div class="colRight">
+                        <input name="Password" type="password" id="Password" />
+                        <span id="valPassword" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblReEnterPassword">Re-enter Password:</label>
+                    <div class="colRight">
+                        <input name="ReEnterPassword" type="password" id="ReEnterPassword" />
+                        <span id="valReEnterPassword" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblPreferredConsole">Preferred Console:</label>
+                    <div class="colRight">
+                        <input name="PreferredConsole" type="text" maxlength="50" id="PreferredConsole" />
+                        <span id="valPreferredConsole" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblDesiredGame">Desired Game:</label>
+                    <div class="colRight">
+                        <input name="DesiredGame" type="text" maxlength="50" id="DesiredGame" />
+                        <span id="valDesiredGame" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblPhone">Phone:</label>
+                    <div class="colRight">
+                        <input name="Phone" type="text" maxlength="50" id="Phone" />
+                        <span id="valPhone" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblEmail">E-Mail:</label>
+                    <div class="colRight">
+                        <input name="Email" type="text" maxlength="50" id="Email" />
+                        <span id="valEmail" class="val">*</span>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblCity:">City:</label>
+                    <div class="colRight">
+                        <input name="City" type="text" maxlength="50" id="City" />&nbsp;(Optional)
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblCountry">Country:</label>
+                    <div class="colRight">
+                        <input name="Country" type="text" maxlength="50" id="Country" />&nbsp;(Optional)
+                    </div>
+                </li>
+
+                <!-- Submit button and feedback message area -->
+                <li>
+                    <label class="colLeft" id="lblSubmit:">&nbsp;</label>
+                    <div class="colRight">
+                        <div id="lblRegisterConditions">By clicking on this Submit button, I agree to treat Members Area content as confidential.</div>
+                    </div>
+                </li>
+                <li>
+                    <label class="colLeft" id="lblSubmit:">&nbsp;</label>
+                    <div class="colRight">
+                        <input type="submit" name="Submit" value="Submit" id="Submit" />
+                    </div>
+                </li>
+
+                <li>
+                    <div style="clear:both">&nbsp;</div>
+                    <label class="colLeft" id="lblResponse">Response:</label>
+                    <div class="colRight">
+                        <div id="lblResponse"></div>
+                    </div>
+                </li>
+
+            </ul>
+
+        </form>
+    </div>
+</body>
+</html>
